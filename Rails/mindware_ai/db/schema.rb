@@ -10,43 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_09_154347) do
-  create_table "categories", force: :cascade do |t|
-    t.string "name"
-    t.integer "category_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_categories_on_category_id"
-  end
-
-  create_table "order_items", force: :cascade do |t|
-    t.integer "order_id", null: false
+ActiveRecord::Schema[7.0].define(version: 2023_07_10_060513) do
+  create_table "carts", force: :cascade do |t|
+    t.integer "user_id", null: false
     t.integer "product_id", null: false
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_order_items_on_order_id"
-    t.index ["product_id"], name: "index_order_items_on_product_id"
-  end
-
-  create_table "orders", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.decimal "total_amount"
-    t.text "shipping_address"
-    t.text "billing_address"
-    t.datetime "order_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_orders_on_user_id"
-  end
-
-  create_table "product_categories", force: :cascade do |t|
-    t.integer "product_id", null: false
-    t.integer "category_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_product_categories_on_category_id"
-    t.index ["product_id"], name: "index_product_categories_on_product_id"
+    t.index ["product_id"], name: "index_carts_on_product_id"
+    t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -56,34 +28,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_09_154347) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "reviews", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "product_id", null: false
-    t.integer "rating"
-    t.text "review_content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_reviews_on_product_id"
-    t.index ["user_id"], name: "index_reviews_on_user_id"
-  end
-
-  create_table "shopping_cart_items", force: :cascade do |t|
-    t.integer "shopping_cart_id", null: false
-    t.integer "product_id", null: false
-    t.integer "quantity"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_shopping_cart_items_on_product_id"
-    t.index ["shopping_cart_id"], name: "index_shopping_cart_items_on_shopping_cart_id"
-  end
-
-  create_table "shopping_carts", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_shopping_carts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -111,15 +55,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_09_154347) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "categories", "categories"
-  add_foreign_key "order_items", "orders"
-  add_foreign_key "order_items", "products"
-  add_foreign_key "orders", "users"
-  add_foreign_key "product_categories", "categories"
-  add_foreign_key "product_categories", "products"
-  add_foreign_key "reviews", "products"
-  add_foreign_key "reviews", "users"
-  add_foreign_key "shopping_cart_items", "products"
-  add_foreign_key "shopping_cart_items", "shopping_carts"
-  add_foreign_key "shopping_carts", "users"
+  add_foreign_key "carts", "products"
+  add_foreign_key "carts", "users"
 end

@@ -1,10 +1,9 @@
-class CreateReviews < ActiveRecord::Migration[7.0]
+class CreateCarts < ActiveRecord::Migration[7.0]
   def change
-    create_table :reviews do |t|
+    create_table :carts do |t|
       t.references :user, null: false, foreign_key: true
       t.references :product, null: false, foreign_key: true
-      t.integer :rating
-      t.text :review_content
+      t.integer :quantity
 
       t.timestamps
     end

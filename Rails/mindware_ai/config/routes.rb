@@ -3,22 +3,9 @@ Rails.application.routes.draw do
 
   resources :users
 
-  resources :products, only: [:index, :show, :create, :update, :destroy]
-  resources :categories, only: [:index, :show, :create, :update, :destroy]
-  resources :reviews, only: [:index, :show, :create, :update, :destroy]
-  resources :order_items, only: [:index, :show, :create, :update, :destroy]
-  resources :orders, only: [:index, :show, :create, :update, :destroy]
-  resources :shopping_cart_items, only: [:index, :show, :create, :update, :destroy]
-  resources :shopping_carts, only: [:index, :show, :create, :update, :destroy]
-  resources :product_categories, only: [:index, :show, :create, :update, :destroy]
-
-  resources :shopping_carts do
-    get 'user/:user_id', action: :show_by_user, on: :collection
-    post 'add_product', on: :member
-  end
+  resources :products, only: [:index, :show]
+  resource :cart, only: [:show, :create, :update, :destroy]
   
-  
-
   # Example root route
   # root 'welcome#index'
 end
