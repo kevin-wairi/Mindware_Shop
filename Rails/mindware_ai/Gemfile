@@ -49,3 +49,11 @@ group :development do
   # gem "spring"
 end
 
+
+gem 'rack-cors'
+gem 'byebug'
+group :development, :test do
+  gem 'rspec-rails'
+end
+
+gem 'byebug', group: :development

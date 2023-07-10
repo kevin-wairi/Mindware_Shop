@@ -1,9 +1,16 @@
-# frozen_string_literal: true
+class User < ApplicationRecord
+  include Devise::Models # Add this line if not already present
 
-class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  after_create :create_additional_data
+
   include DeviseTokenAuth::Concerns::User
+
+  def create_additional_data
+    # Create ShoppingCart
+    ShoppingCart.create!(
+      user: self # Set the user association using 'self'
+    )
+  end
 end
