@@ -1,14 +1,46 @@
+import { useState, useEffect } from "react";
 import React from "react";
 
-function CartComponent({ products }) {
+function CartComponent({ cartItems }) {
+  const [productDetails, setProductDetails] = useState([]);
+
+  useEffect(() => {
+    // Fetch product details for each item in the cart
+    const fetchProductDetails = async () => {
+      const requests = cartItems.map((item) =>
+        fetch(`http://localhost:3000/products/${item.product_id}`).then(
+          (response) => response.json()
+        )
+      );
+      const responses = await Promise.all(requests);
+      setProductDetails(responses);
+    };
+
+    fetchProductDetails();
+  }, [cartItems]);
+
+  console.log(productDetails);
+
+  const handleRemove = (index) => {
+    // Remove the product from the cartItems array
+    const updatedCartItems = cartItems.filter((_, i) => i !== index);
+    // Update the state to re-render the component
+    setProductDetails(updatedCartItems);
+  };
+
+  const handleQuantityChange = (index, quantity) => {
+    // Update the quantity of the product in the cartItems array
+    const updatedCartItems = [...cartItems];
+    updatedCartItems[index].quantity = quantity;
+    // Update the state to re-render the component
+    setProductDetails(updatedCartItems);
+  };
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Image</span>
-            </th>
             <th scope="col" className="px-6 py-3">
               Product
             </th>
@@ -24,22 +56,23 @@ function CartComponent({ products }) {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {productDetails.map((product, index) => (
             <tr
               key={index}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
-              <td className="w-32 p-4">
-                <img src={product.image} alt={product.name} />
-              </td>
               <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
                 {product.name}
+                name
               </td>
               <td className="px-6 py-4">
                 <div className="flex items-center space-x-3">
                   <button
                     className="inline-flex items-center justify-center p-1 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button"
+                    onClick={() =>
+                      handleQuantityChange(index, product.quantity - 1)
+                    }
                   >
                     <span className="sr-only">Quantity button</span>
                     <svg
@@ -64,12 +97,19 @@ function CartComponent({ products }) {
                       id={`product_${index}`}
                       className="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="1"
+                      value={product.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(index, parseInt(e.target.value))
+                      }
                       required
                     />
                   </div>
                   <button
                     className="inline-flex items-center justify-center h-6 w-6 p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button"
+                    onChange={(e) =>
+                      handleQuantityChange(index, parseInt(e.target.value))
+                    }
                   >
                     <span className="sr-only">Quantity button</span>
                     <svg
@@ -94,12 +134,12 @@ function CartComponent({ products }) {
                 {product.price}
               </td>
               <td className="px-6 py-4">
-                <a
-                  href="#"
+                <button
                   className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                  onClick={() => handleRemove(index)}
                 >
                   Remove
-                </a>
+                </button>
               </td>
             </tr>
           ))}

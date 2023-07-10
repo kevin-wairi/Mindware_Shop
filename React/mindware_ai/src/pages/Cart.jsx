@@ -1,29 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import CartComponent from "../components/CartComponent";
 
 const Cart = () => {
-  const products = [
-    {
-      name: "Apple Watch",
-      image: "/docs/images/products/apple-watch.png",
-      price: "$599",
-    },
-    {
-      name: 'iMac 27"',
-      image: "/docs/images/products/imac.png",
-      price: "$2499",
-    },
-    {
-      name: "iPhone 12",
-      image: "/docs/images/products/iphone-12.png",
-      price: "$999",
-    },
-  ];
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    // Fetch the cart items from the API
+    fetch("http://localhost:3000/cart")
+      .then((response) => response.json())
+      .then((data) => setCartItems(data));
+  }, []);
+
+  // console.log(cartItems);
 
   return (
     <Layout>
-      <CartComponent products={products} />
+      <h1>Cart</h1>
+      <CartComponent cartItems={[...cartItems]} />
     </Layout>
   );
 };

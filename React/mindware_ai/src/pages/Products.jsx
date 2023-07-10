@@ -28,6 +28,32 @@ function Products() {
     }
   };
 
+  const handleAddToCart = async (productId) => {
+    console.log(productId);
+    try {
+      const response = await fetch("http://localhost:3000/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: 1, // Replace with the actual user ID
+          product_id: productId,
+          quantity: 1, // Replace with the desired quantity
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add product to cart");
+      }
+
+      const data = await response.json();
+      console.log("Product added to cart:", data);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+
   // ...
 
   console.log(productList);
@@ -35,7 +61,11 @@ function Products() {
   return (
     <Layout>
       <SearchComponent />
-      {isLoading ? <p>Loading...</p> : <ProductList products={productList} />}
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <ProductList products={productList} handleAddToCart={handleAddToCart} />
+      )}
     </Layout>
   );
 }
