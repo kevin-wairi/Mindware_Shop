@@ -6,12 +6,11 @@ import SearchComponent from "../components/SearchComponent";
 function Products() {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  // ...
 
   const fetchProducts = async () => {
     try {
@@ -54,17 +53,35 @@ function Products() {
     }
   };
 
-  // ...
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
-  console.log(productList);
+  const getFilteredProducts = () => {
+    if (searchQuery === "") {
+      return productList;
+    }
+
+    const query = searchQuery.toLowerCase();
+    return productList.filter((product) => {
+      const { name, description } = product;
+      return (
+        name.toLowerCase().includes(query) ||
+        description.toLowerCase().includes(query)
+      );
+    });
+  };
 
   return (
     <Layout>
-      <SearchComponent />
+      <SearchComponent onSearch={handleSearch} />
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <ProductList products={productList} handleAddToCart={handleAddToCart} />
+        <ProductList
+          products={getFilteredProducts()}
+          handleAddToCart={handleAddToCart}
+        />
       )}
     </Layout>
   );

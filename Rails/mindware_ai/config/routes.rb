@@ -4,8 +4,8 @@ Rails.application.routes.draw do
   resources :users
 
   resources :products, only: [:index, :show]
-  resource :cart, only: [:show, :create, :update, :destroy]
-  
+  resources :carts
+
   # Example root route
   # root 'welcome#index'
 end
