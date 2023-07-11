@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Layout = ({ children }) => {
+  const [cartCount, setCartCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userDataString = localStorage.getItem("userData");
+    if (userDataString) {
+      setLoggedIn(true);
+      const userData = JSON.parse(userDataString);
+      const id = userData.id;
+      // Fetch cart items from the server based on user_id (id)
+      fetch(`http://127.0.0.1:3000/carts/user/${id}`)
+        .then(function (response) {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not OK");
+        })
+        .then(function (data) {
+          console.log("data", data.length);
+          setCartCount(data.length);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, []);
+
   const navigate = useNavigate();
   const handleLogout = () => {
     // Clear token and user data from localStorage
@@ -28,26 +55,23 @@ const Layout = ({ children }) => {
             </span>
           </a>
           <div className="flex md:order-2">
-            <button
-              type="button"
-              onClick={() => handleLogout()}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
+            {loggedIn ? (
+              <button
+                type="button"
+                onClick={() => handleLogout()}
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
-                />
-              </svg>
-            </button>
+                Sign out
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate(`/sign-in`)}
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Sign in
+              </button>
+            )}
             <button
               data-collapse-toggle="navbar-sticky"
               type="button"
@@ -90,7 +114,7 @@ const Layout = ({ children }) => {
               </li>
               <li>
                 <span className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                  <Link to={`/cart`}>Cart(1)</Link>
+                  <Link to={`/cart`}>Cart({cartCount})</Link>
                 </span>
               </li>
               <li>

@@ -11,7 +11,6 @@ import Profile from "./pages/Profile";
 // components
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import Layout from "./components/Layout";
-import LogoutButton from "./components/LogoutButton";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 

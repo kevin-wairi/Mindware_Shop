@@ -5,7 +5,7 @@ class CartsController < ApplicationController
     @carts = Cart.all
     render json: @carts
   end
-
+  
   def show
     render json: @cart
   end
@@ -41,10 +41,10 @@ class CartsController < ApplicationController
   end
 
   def index_by_user
-    @carts = Cart.where(user_id: params[:user_id])
-    render json: @carts
+    @carts = Cart.includes(:user, :product).where(user_id: params[:user_id])
+    render json: @carts.to_json(include: [:user, :product])
   end
-
+  
   private
 
   def set_cart

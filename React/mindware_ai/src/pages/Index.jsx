@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Index() {
+  const navigate = useNavigate();
+
   return (
     <>
       <section className="bg-white dark:bg-gray-900">
@@ -9,12 +12,14 @@ function Index() {
             Mindware shop
           </h1>
           <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">
-            Here at Flowbite we focus on markets where technology, innovation,
-            and capital can unlock long-term value and drive economic growth.
+            At Mindware, we're dedicated to revolutionizing your shopping
+            experience with cutting-edge technology, innovative solutions, and
+            the power of choice. Discover a world where every purchase unlocks
+            long-term value and fuels economic growth.
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-            <a
-              href="#"
+            <button
+              onClick={() => navigate(`/products`)}
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               Get started
@@ -33,7 +38,7 @@ function Index() {
                   d="M1 5h12m0 0L9 1m4 4L9 9"
                 />
               </svg>
-            </a>
+            </button>
             <a
               href="#"
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"

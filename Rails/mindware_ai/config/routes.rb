@@ -8,4 +8,7 @@ Rails.application.routes.draw do
 
   # Example root route
   # root 'welcome#index'
+
+  # Add the route
+  get 'carts/user/:user_id', to: 'carts#index_by_user'
 end
